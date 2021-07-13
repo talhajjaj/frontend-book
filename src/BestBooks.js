@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import './BestBooks.css';
 import { withAuth0 } from "@auth0/auth0-react";
+import axios from 'axios';
+import BookFormModal from 'BookFormModal';
+import { Button } from 'bootstrap';
 
 class MyFavoriteBooks extends React.Component {
   constructor(props){
@@ -11,6 +14,8 @@ class MyFavoriteBooks extends React.Component {
       email: '',
       bookData: [],
       showBook: false,
+      showModal: false
+
     }
   }
   componentDidMount = async () => {
@@ -26,6 +31,53 @@ class MyFavoriteBooks extends React.Component {
       bookData: responsData.data,
     })
   }
+renderForm =async() =>{
+  await this.setState({
+    showModal:true
+  })
+}
+handleClose= async () =>{
+  await this.setState({
+    showModal:false
+  })
+}
+ handleForm = async (event)=>{
+   event.preventDefault();
+   await this.setState({
+     showModal:false
+   })
+   const newBookobj={
+     email: this.state.userEmail,
+     name: event.target.name.value,
+     description:event.target.description.value,
+     img: event.target.img.value,
+   }
+   let url=`${process.env.REACT_APP_BOOK}/addbook`
+   let responseBook= await axios.post(url,newBookobj);
+ 
+   await this.setState({
+     renderBook:responseBook.data
+   })
+ }
+
+ deleteBook = async(index) =>{
+
+
+  let paramsObj = {
+    email:this.state.userEmail,
+  }
+  let url =`${process.env.REACT_APP_BOOK}/deletebook/${index}`;
+
+  let deletBookrespons = await axios.delete(url,{params:paramsObj});
+  
+  this.setState({
+    renderBook:deletBookrespons.data
+  })
+
+
+}
+
+
 
 
   render() {
@@ -35,6 +87,13 @@ class MyFavoriteBooks extends React.Component {
         <p>
           This is a collection of my favorite books
         </p>
+        {this.state.bookData.map(book => {
+          return (<BookCard showBook={this.state.showBook} renderBook={book} />)
+        })}
+                <Button  onClick={this.renderForm} >ADD BOOK</Button>
+
+                <ModalForm handleClose={this.handleClose} showModal={this.state.showModal} handelForm={this.handelForm}  />
+
       </Jumbotron>
     )
   }
