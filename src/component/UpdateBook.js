@@ -4,18 +4,18 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button'
 
 
-class BookFormModel extends React.Component{
+class UpdateBook extends React.Component{
 render(){
     return (
     <div>
 <Modal show={this.props.showModal} onHide={this.props.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Add Book</Modal.Title>
+                        <Modal.Title>Update Book</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
 
 
-                        <Form onSubmit={this.props.BookForm}>
+                        <Form onSubmit={this.props.updateBook}>
                             <Form.Group className="mb-3" >
                                 <Form.Label>Book Name</Form.Label>
                                 <Form.Control type="text" placeholder="Enter Book Name" name="name" />
@@ -40,7 +40,7 @@ render(){
 
                             <Modal.Footer>
                                 <Button variant="primary" type="submit">
-                                    Submit
+                                    Update
                                 </Button>
                                 <Button variant="secondary" onClick={this.props.handleClose}>
                                     Close
@@ -59,4 +59,4 @@ render(){
 
 }
 
-export default BookFormModel;
+export default UpdateBook;
